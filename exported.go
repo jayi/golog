@@ -12,6 +12,10 @@ var (
 		calldepth: 1}
 )
 
+func StandardLogger() *Logger {
+	return std
+}
+
 func Level() int {
 	return std.Level()
 }
