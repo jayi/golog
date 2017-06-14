@@ -8,8 +8,8 @@ import (
 var (
 	std = &Logger{
 		Logger:*log.New(os.Stdout, "", log.Ldate | log.Ltime | log.Lshortfile),
-		level:TraceLevel,
-		calldepth: 1}
+		LogLevel:TraceLevel,
+		Calldepth: 1}
 )
 
 func StandardLogger() *Logger {

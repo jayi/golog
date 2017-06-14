@@ -25,20 +25,20 @@ var (
 type Logger struct {
 	log.Logger
 	mu     sync.Mutex // ensures atomic writes; protects the following fields
-	level int
-	calldepth int
+	LogLevel int
+	Calldepth int
 }
 
 func (l *Logger) Level() int {
 	l.mu.Lock()
 	defer l.mu.Unlock()
-	return l.level
+	return l.LogLevel
 }
 
 func (l *Logger) SetLevel(level int) {
 	l.mu.Lock()
 	defer l.mu.Unlock()
-	l.level = level
+	l.LogLevel = level
 }
 
 func (l *Logger) SetLevelString(levelString string) {
@@ -61,12 +61,12 @@ func (l *Logger) SetLevelString(levelString string) {
 }
 
 func (l *Logger) Logf(level int, format string, v ...interface{}) {
-	if l.level > level {
+	if l.LogLevel > level {
 		return
 	}
 
 	s := fmt.Sprintf(format, v...)
-	l.Output(3 + l.calldepth, LevelString[level] + s)
+	l.Output(3 + l.Calldepth, LevelString[level] + s)
 
 	if level == PanicLevel {
 		panic(s)
@@ -76,12 +76,12 @@ func (l *Logger) Logf(level int, format string, v ...interface{}) {
 }
 
 func (l *Logger) Log(level int, v ...interface{}) {
-	if l.level > level {
+	if l.LogLevel > level {
 		return
 	}
 
 	s := fmt.Sprint(v...)
-	l.Output(3 + l.calldepth, LevelString[level] + s)
+	l.Output(3 + l.Calldepth, LevelString[level] + s)
 
 	if level == PanicLevel {
 		panic(s)
@@ -91,12 +91,12 @@ func (l *Logger) Log(level int, v ...interface{}) {
 }
 
 func (l *Logger) Logln(level int, v ...interface{}) {
-	if l.level > level {
+	if l.LogLevel > level {
 		return
 	}
 
 	s := fmt.Sprintln(v...)
-	l.Output(3 + l.calldepth, LevelString[level] + s)
+	l.Output(3 + l.Calldepth, LevelString[level] + s)
 
 	if level == PanicLevel {
 		panic(s)
