@@ -8,7 +8,7 @@ import (
 var (
 	std = &Logger{
 		Logger:*log.New(os.Stdout, "", log.Ldate | log.Ltime | log.Lshortfile),
-		LogLevel:TraceLevel,
+		Level:TraceLevel,
 		Calldepth: 1}
 )
 
@@ -16,8 +16,8 @@ func StandardLogger() *Logger {
 	return std
 }
 
-func Level() int {
-	return std.Level()
+func GetLevel() int {
+	return std.GetLevel()
 }
 
 func SetLevel(level int) {

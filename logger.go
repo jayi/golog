@@ -25,20 +25,20 @@ var (
 type Logger struct {
 	log.Logger
 	mu     sync.Mutex // ensures atomic writes; protects the following fields
-	LogLevel int
+	Level int
 	Calldepth int
 }
 
-func (l *Logger) Level() int {
+func (l *Logger) GetLevel() int {
 	l.mu.Lock()
 	defer l.mu.Unlock()
-	return l.LogLevel
+	return l.Level
 }
 
 func (l *Logger) SetLevel(level int) {
 	l.mu.Lock()
 	defer l.mu.Unlock()
-	l.LogLevel = level
+	l.Level = level
 }
 
 func (l *Logger) SetLevelString(levelString string) {
@@ -61,7 +61,7 @@ func (l *Logger) SetLevelString(levelString string) {
 }
 
 func (l *Logger) Logf(level int, format string, v ...interface{}) {
-	if l.LogLevel > level {
+	if l.Level > level {
 		return
 	}
 
@@ -76,7 +76,7 @@ func (l *Logger) Logf(level int, format string, v ...interface{}) {
 }
 
 func (l *Logger) Log(level int, v ...interface{}) {
-	if l.LogLevel > level {
+	if l.Level > level {
 		return
 	}
 
@@ -91,7 +91,7 @@ func (l *Logger) Log(level int, v ...interface{}) {
 }
 
 func (l *Logger) Logln(level int, v ...interface{}) {
-	if l.LogLevel > level {
+	if l.Level > level {
 		return
 	}
 
