@@ -1,11 +1,13 @@
 package golog
 
 import (
-	"log"
 	"fmt"
+	"io"
+	"log"
 	"os"
-	"sync"
+	"runtime"
 	"strings"
+	"sync"
 )
 
 const (
@@ -24,9 +26,32 @@ var (
 
 type Logger struct {
 	log.Logger
-	mu     sync.Mutex // ensures atomic writes; protects the following fields
-	Level int
+	mu        sync.Mutex // ensures atomic writes; protects the following fields
+	Level     int
 	Calldepth int
+}
+
+func NewLogger(out io.Writer, level int) *Logger {
+	return &Logger{
+		Logger:    *log.New(out, "", log.Ldate|log.Ltime|log.Lshortfile),
+		Level:     level,
+		Calldepth: 0}
+}
+
+func NewFileLogger(filename string, level int) (*Logger, error) {
+	fw, err := os.OpenFile(filename, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
+	if err != nil {
+		return nil, err
+	}
+	logger := &Logger{
+		Logger:    *log.New(fw, "", log.Ldate|log.Ltime|log.Lshortfile),
+		Level:     level,
+		Calldepth: 0,
+	}
+	runtime.SetFinalizer(logger, func(logger *Logger) {
+		fw.Close()
+	})
+	return logger, err
 }
 
 func (l *Logger) GetLevel() int {
@@ -66,7 +91,7 @@ func (l *Logger) Logf(level int, format string, v ...interface{}) {
 	}
 
 	s := fmt.Sprintf(format, v...)
-	l.Output(3 + l.Calldepth, LevelString[level] + s)
+	l.Output(3+l.Calldepth, LevelString[level]+s)
 
 	if level == PanicLevel {
 		panic(s)
@@ -81,7 +106,7 @@ func (l *Logger) Log(level int, v ...interface{}) {
 	}
 
 	s := fmt.Sprint(v...)
-	l.Output(3 + l.Calldepth, LevelString[level] + s)
+	l.Output(3+l.Calldepth, LevelString[level]+s)
 
 	if level == PanicLevel {
 		panic(s)
@@ -96,7 +121,7 @@ func (l *Logger) Logln(level int, v ...interface{}) {
 	}
 
 	s := fmt.Sprintln(v...)
-	l.Output(3 + l.Calldepth, LevelString[level] + s)
+	l.Output(3+l.Calldepth, LevelString[level]+s)
 
 	if level == PanicLevel {
 		panic(s)

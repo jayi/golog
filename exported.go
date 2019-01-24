@@ -7,8 +7,8 @@ import (
 
 var (
 	std = &Logger{
-		Logger:*log.New(os.Stdout, "", log.Ldate | log.Ltime | log.Lshortfile),
-		Level:TraceLevel,
+		Logger:    *log.New(os.Stdout, "", log.Ldate|log.Ltime|log.Lshortfile),
+		Level:     TraceLevel,
 		Calldepth: 1}
 )
 
@@ -111,4 +111,3 @@ func Panic(v ...interface{}) {
 func Panicln(v ...interface{}) {
 	std.Panicln(v...)
 }
-
