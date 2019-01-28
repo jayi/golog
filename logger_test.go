@@ -25,12 +25,13 @@ func TestNewFileLogger(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := NewFileLogger(tt.args.filename, tt.args.level)
+			got, err := NewFileLogger(tt.args.filename, tt.args.level, 0)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("NewFileLogger() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
 			got.Infoln("heheda")
+			got.Println("not prefix")
 		})
 	}
 }

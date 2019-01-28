@@ -38,13 +38,13 @@ func NewLogger(out io.Writer, level int) *Logger {
 		Calldepth: 0}
 }
 
-func NewFileLogger(filename string, level int) (*Logger, error) {
+func NewFileLogger(filename string, level int, flag int) (*Logger, error) {
 	fw, err := os.OpenFile(filename, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
 	if err != nil {
 		return nil, err
 	}
 	logger := &Logger{
-		Logger:    *log.New(fw, "", log.Ldate|log.Ltime|log.Lshortfile),
+		Logger:    *log.New(fw, "", flag),
 		Level:     level,
 		Calldepth: 0,
 	}
