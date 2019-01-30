@@ -215,11 +215,13 @@ func (l *Logger) Panicln(v ...interface{}) {
 	l.Logln(PanicLevel, v...)
 }
 
-func (l *Logger) PrintJson(i interface{}) {
-	data, err := json.Marshal(i)
-	if err != nil {
-		l.Println(i, err)
-	} else {
-		l.Println(string(data))
+func (l *Logger) PrintJson(v ...interface{}) {
+	for _, i := range v {
+		data, err := json.Marshal(i)
+		if err != nil {
+			l.Println(i, err)
+		} else {
+			l.Println(string(data))
+		}
 	}
 }

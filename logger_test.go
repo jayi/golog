@@ -32,6 +32,12 @@ func TestNewFileLogger(t *testing.T) {
 			}
 			got.Infoln("heheda")
 			got.Println("not prefix")
+			a := map[string]string{
+				"ka": "va",
+				"kb": "vb",
+			}
+			got.PrintJson(a)
+			got.PrintJson(a, a, a)
 		})
 	}
 }
